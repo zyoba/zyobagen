@@ -9,13 +9,19 @@ Create the app:
 
 ```bash
 $ npm install -g git+ssh://git@github.com/zyoba/zyobagen.git
-$ express /tmp/foo && cd /tmp/foo
+$ zyobagen /tmp/foo && cd /tmp/foo
 ```
 
 Install dependencies:
 
 ```bash
 $ npm install
+```
+
+Update application config:
+
+```bash
+$ cp sample-config.js config.js
 ```
 
 Rock and Roll
