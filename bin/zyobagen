@@ -70,8 +70,8 @@ var compass = fs.readFileSync(__dirname + '/../templates/css/style.scss', 'utf-8
 var appFiles = [
     { name: 'app', from: '/../templates/js/app.js', to: '/app.js'},
     { name: 'sampleConfig', from: '/../templates/js/sample-config.js', to: '/sample-config.js'},
-    { name: 'gitIgnore', from: '/../templates/.gitignore', to: '/.gitignore'},
-    { name: 'arcConfig', from: '/../templates/.arcconfig', to: '/.arcconfig'},
+    { name: 'gitIgnore', from: '/../templates/_gitignore', to: '/.gitignore'},
+    { name: 'arcConfig', from: '/../templates/_arcconfig', to: '/.arcconfig'},
     { name: 'readme', from: '/../templates/README.md', to: '/README.md'},
     { name: 'binDeploy', from: '/../templates/bin/deploy', to: '/bin/deploy', mode: 0755},
     { name: 'binDocker', from: '/../templates/bin/docker', to: '/bin/docker', mode: 0755},
