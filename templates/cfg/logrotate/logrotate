@@ -1,0 +1,12 @@
+"/var/www/{name}/releases/current/logs/{name}.out"
+"/var/www/{name}/releases/current/logs/upstart.log"
+"/var/www/{name}/releases/current/logs/{name}.err" {
+  su www-data www-data
+  create 755 www-data www-data
+  daily
+  rotate 30
+  compress
+  postrotate
+    reload {name} >/dev/null 2>&1 || true
+  endscript
+}

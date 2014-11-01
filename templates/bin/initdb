@@ -1,0 +1,83 @@
+#!/usr/bin/env node
+
+'use strict';
+
+var fs = require('fs');
+var util = require('util');
+var path = require('path');
+var exec = require('child_process').exec;
+var rint = require('readline').createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+var config = require('../config').db;
+
+console.log('**************************************************************');
+console.log('Connecting to database `' + config.database + '` on ' + config.host);
+console.log('THIS WILL WIPE OUT `' + config.database + '.*@' + config.host + '`');
+console.log('Press ^C to abort if unsure, enter to continue');
+console.log('**************************************************************');
+
+var mysqlOpts = [];
+
+if (config.host) mysqlOpts.push('-h' + config.host);
+if (config.port) mysqlOpts.push('-P' + config.port);
+if (config.user) mysqlOpts.push('-u' + config.user);
+if (config.password) mysqlOpts.push('-p' + config.password);
+
+mysqlOpts.push(config.database);
+
+rint.question('continue?', function (yes) {
+  console.log('initing db ...');
+  initdb(createdb);
+
+  function createdb() {
+    var dir = path.join(__dirname, '../resources/db');
+    fs.readdir(dir, createTables);
+  }
+});
+
+function initdb(cb) {
+  var cmd = util.format(' -e "DROP database if exists %s; CREATE database %s;"', config.database, config.database);
+  run(cmd, cb);
+}
+
+function run(query, cb) {
+  var cmd = 'mysql ' + mysqlOpts.join(' ') + query;
+  console.log(cmd);
+  var mysql = exec(cmd, respond);
+
+  function respond(err, stdout, stderr) {
+    if (err) {
+      console.log('Error ' + err);
+      console.log('stdout: ' + stdout);
+      console.log('stderr: ' + stderr);
+    }
+
+    if (cb) cb(err);
+  }
+}
+
+function createTables(err, tables) {
+  tables = tables.sort();
+  var table = tables.shift();
+  if (err || !table) {
+    console.log(err || 'Completed');
+    return finalize(err);
+  }
+
+  createTable(table, function (err) {
+    return createTables(err, tables);
+  });
+}
+
+function createTable(table, cb) {
+  var cmd = ' < ' + 'resources/db/' + table;
+  util.log('creating table from ' + table);
+  run(cmd, cb);
+}
+
+function finalize(err) {
+  process.exit(1);
+}

@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+abort() {
+  echo
+  echo "  $@" 1>&2
+  echo
+  exit 1
+}
+
+log() {
+  echo "  ○ $@"
+}
+
+PROJDIR=../
+CONFIGDIR=cfg
+
+cd $PROJDIR
+
+## Copy init script to /etc/init
+sudo cp $CONFIGDIR/init/init.conf /etc/init/{name}.conf || abort 'failed to copy init script'
+
+## Copy logrotation files
+sudo cp $CONFIGDIR/logrotate/logrotate /etc/logrotate.d/{name} || abort 'failed to setup logrotation'
+
+## Copy nginx config, enable and reload
+sudo cp $CONFIGDIR/nginx/nginx /etc/nginx/sites-available/{name}.zyobalabs.com || abort 'failed to copy nginx config'
+sudo ln -s /etc/nginx/sites-available/{name}.zyobalabs.com /etc/nginx/sites-enabled/
+
+sudo nginx -t || abort 'Nginx: Configuration Test Failed'
+sudo nginx -s reload
+
+## Start the service
+sudo start {name}
+
+## Verify that node is up, by connecting to it on the proxy port
