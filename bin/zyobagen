@@ -48,11 +48,6 @@ function load_template(name) {
         'utf-8').replace(/{name}/g, app_name);
 }
 
-// Routes
-
-var index = load_template('js/routes/index.js');
-var home = load_template('js/routes/home.js');
-
 // CSS
 
 var css = fs.readFileSync(__dirname + '/../templates/css/style.css', 'utf-8');
@@ -281,11 +276,6 @@ function createApplicationAt(path) {
         // Create symlinks
         fs.symlinkSync('../node_modules/proc-utils/bin/cluster', path + '/bin/cluster');
         fs.symlinkSync('../node_modules/proc-utils/bin/deploy.sh', path + '/deploy/deploy.sh');
-
-        // mkdir(path + '/bin', function(){
-        // //   www = www.replace('{name}', app_name);
-        // //   write(path + '/bin/www', www, 0755);
-        // });
     });
 }
 
