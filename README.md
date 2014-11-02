@@ -8,7 +8,7 @@ The quickest way to get started with express is to utilize the executable `expre
 Create the app:
 
 ```bash
-$ npm install -g git+ssh://git@github.com/zyoba/zyobagen.git
+$ npm install -g zyobagen
 $ zyobagen /tmp/foo && cd /tmp/foo
 ```
 
