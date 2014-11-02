@@ -45,7 +45,7 @@ if (program.hbs) program.template = 'hbs';
 
 function load_template(name) {
     return fs.readFileSync(path.join(__dirname, '..', 'templates', name),
-        'utf-8');
+        'utf-8').replace(/{name}/g, app_name);
 }
 
 // Routes
@@ -61,34 +61,32 @@ var stylus = fs.readFileSync(__dirname + '/../templates/css/style.styl', 'utf-8'
 var compass = fs.readFileSync(__dirname + '/../templates/css/style.scss', 'utf-8');
 
 // APP
-// write(path + '/app.js', app);
-// write(path + '/sample-config.js', sampleConfig);
-// write(path + '/.gitignore', gitIgnore);
-// write(path + '/.arcconfig', arcConfig);
-// write(path + '/README.md', readme);
 
 var appFiles = [
-    { name: 'app', from: '/../templates/js/app.js', to: '/app.js'},
-    { name: 'sampleConfig', from: '/../templates/js/sample-config.js', to: '/sample-config.js'},
-    { name: 'gitIgnore', from: '/../templates/_gitignore', to: '/.gitignore'},
-    { name: 'arcConfig', from: '/../templates/_arcconfig', to: '/.arcconfig'},
-    { name: 'readme', from: '/../templates/README.md', to: '/README.md'},
-    { name: 'binDeploy', from: '/../templates/bin/deploy', to: '/bin/deploy', mode: 0755},
-    { name: 'binDocker', from: '/../templates/bin/docker', to: '/bin/docker', mode: 0755},
-    { name: 'binInitDb', from: '/../templates/bin/initdb', to: '/bin/initdb', mode: 0755},
-    { name: 'binMinify', from: '/../templates/bin/minify', to: '/bin/minify', mode: 0755},
-    { name: 'binSetup', from: '/../templates/bin/setup', to: '/bin/setup', mode: 0755},
-    { name: 'cfgInit', from: '/../templates/cfg/init/init.conf', to: '/cfg/init/' + app_name + '.conf'},
-    { name: 'cfgLogrotate', from: '/../templates/cfg/logrotate/logrotate', to: '/cfg/logrotate/' + app_name},
-    { name: 'cfgNginx', from: '/../templates/cfg/nginx/nginx', to: '/cfg/nginx/' + app_name + '.zyobalabs.com'},
-    { name: 'deployConf', from: '/../templates/deploy/deploy.conf', to: '/deploy/deploy.conf'},
+    { name: 'app', from: 'js/app.js', to: '/app.js'},
+    { name: 'sampleConfig', from: 'js/sample-config.js', to: '/sample-config.js'},
+    { name: 'gitIgnore', from: '_gitignore', to: '/.gitignore'},
+    { name: 'arcConfig', from: '_arcconfig', to: '/.arcconfig'},
+    { name: 'readme', from: 'README.md', to: '/README.md'},
+    { name: 'binDeploy', from: 'bin/deploy', to: '/bin/deploy', mode: 0755},
+    { name: 'binDocker', from: 'bin/docker', to: '/bin/docker', mode: 0755},
+    { name: 'binInitDb', from: 'bin/initdb', to: '/bin/initdb', mode: 0755},
+    { name: 'binMinify', from: 'bin/minify', to: '/bin/minify', mode: 0755},
+    { name: 'binSetup', from: 'bin/setup', to: '/bin/setup', mode: 0755},
+    { name: 'cfgInit', from: 'cfg/init/init.conf', to: '/cfg/init/' + app_name + '.conf'},
+    { name: 'cfgLogrotate', from: 'cfg/logrotate/logrotate', to: '/cfg/logrotate/' + app_name},
+    { name: 'cfgNginx', from: 'cfg/nginx/nginx', to: '/cfg/nginx/' + app_name + '.zyobalabs.com'},
+    { name: 'deployConf', from: 'deploy/deploy.conf', to: '/deploy/deploy.conf'},
+    { name: 'modelIndex', from: 'js/models/index.js', to: '/models/index.js'},
+    { name: 'routesIndex', from: 'js/routes/index.js', to: '/routes/index.js'},
+    { name: 'routesHome', from: 'js/routes/home.js', to: '/routes/home.js'},
 ];
 
 var appdata = {};
 
 appFiles.forEach(function (e) {
     appdata[e.name] = {
-        data: fs.readFileSync(__dirname + e.from, 'utf-8').replace(/{name}/g, app_name),
+        data: load_template(e.from),
         to: e.to,
         mode: e.mode
     };
@@ -155,11 +153,6 @@ function createApplicationAt(path) {
             default:
                 write(path + '/public/css/style.css', css);
             }
-        });
-
-        mkdir(path + '/routes', function () {
-            write(path + '/routes/index.js', index);
-            write(path + '/routes/home.js', home);
         });
 
         mkdir(path + '/views', function () {
@@ -235,7 +228,10 @@ function createApplicationAt(path) {
                 'serve-favicon': '~2.1.3',
                 'debug': '~2.0.0',
                 'proc-utils': '*',
-                'smush': '*'
+                'smush': '*',
+                'mysql': '2',
+                'anydb-sql': '0',
+                'model-gen': 'git+ssh://git@phabricator.zyoba.org/diffusion/ZBMG/model-gen.git'
             }
         }
 
