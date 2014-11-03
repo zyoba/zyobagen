@@ -75,6 +75,7 @@ var appFiles = [
     { name: 'modelIndex', from: 'js/models/index.js', to: '/models/index.js'},
     { name: 'routesIndex', from: 'js/routes/index.js', to: '/routes/index.js'},
     { name: 'routesHome', from: 'js/routes/home.js', to: '/routes/home.js'},
+    { name: 'restartFile', from: 'system/restart', to: '/public/system/restart'}
 ];
 
 var appdata = {};
