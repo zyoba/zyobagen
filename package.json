@@ -1,7 +1,7 @@
 {
   "name": "zyobagen",
   "description": "Express' application generator",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "Vinayak Mishra <vm@zyoba.com",
   "contributors": [
     "TJ Holowaychuk <tj@vision-media.ca>",
