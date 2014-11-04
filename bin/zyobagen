@@ -30,7 +30,7 @@ var destination_path = program.args.shift() || '.';
 
 // App name
 
-var app_name = path.basename(path.resolve(destination_path));
+var app_name = path.basename(path.resolve(destination_path)).replace(/[^a-z\d]/gi, '');
 
 // end-of-line code
 
